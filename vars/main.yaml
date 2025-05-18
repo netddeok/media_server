@@ -1,0 +1,7 @@
+forwarders:
+  - 8.8.8.8
+  - 1.1.1.1
+
+mydomain: home.lan
+myhostname: media
+

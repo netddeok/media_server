@@ -1,0 +1,24 @@
+---
+
+- name : JELLYFIN MEDIA SERVER PLAYBOOK
+  hosts : media
+  become : true
+  tasks:
+    - name : update pkg list
+      ansible.builtin.apt:
+        update_cache: true
+    
+    - name : install pkg
+      ansible.builtin.apt:
+        name : 
+          - apt-transport-https
+          - gnupg
+
+    - name : download jellyfin script
+      ansible.builtin.get_url:
+        url: https://repo.jellyfin.org/install-debuntu.sh
+        dest: /tmp/install-jellyfin.sh
+        mode: '0700'
+
+    - name : run jellyfin script
+      ansible.builtin.command: /tmp/install-jellyfin.sh

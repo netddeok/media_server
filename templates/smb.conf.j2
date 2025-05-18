@@ -1,0 +1,11 @@
+[global]
+   workgroup = SAMBA
+   security = user
+   passdb backend = tdbsam
+
+[share]
+   path = /srv/samba
+   browseable = yes
+   writable = yes
+   guest ok = no
+   valid users = {{ samba_user }}

@@ -1,0 +1,4 @@
+[media]
+192.168.219.199 #ansible_python_interpreter=/usr/bin/python
+
+

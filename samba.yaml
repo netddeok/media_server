@@ -1,0 +1,57 @@
+---
+- name : Setup samba PLAYBOOK
+  hosts : media
+  become : true
+  vars_files:
+    - vaults/samba_vault.yaml
+
+  tasks:
+# Update && install pkg
+    - name : Update pkg lists && install samba
+      ansible.builtin.apt:
+        update_cache: yes
+        name : samba
+
+# Create USER for samba
+    - name : Create samba user
+      ansible.builtin.user:
+        name : "{{ samba_user }}"
+        shell: /usr/sbin/nologin
+        state: present
+    
+    - name : smbpasswd samba user
+      ansible.builtin.shell: echo -ne "{{ samba_password }}\n{{ samba_password }}" | smbpasswd -s -a {{ samba_user }}
+      args:
+        executable: /bin/bash # bash에서 해당 쉘 명령이 실행되도록 지정
+
+# Make directory for share
+    - name : Create directory
+      ansible.builtin.file:
+        path : /srv/samba
+        state : directory
+        mode: '0770'
+        owner: "{{ samba_user }}"
+        group: "{{ samba_user }}"
+
+# Backup origin smb.conf
+    - name : Backup the original smb.conf
+      ansible.builtin.copy:
+        src: /etc/samba/smb.conf
+        dest: /etc/samba/smb.conf.bak
+        backup: yes
+
+# Edit conf file - /etc/samba/smb.conf
+    - name : Configure smb.conf
+      ansible.builtin.template:
+        src: smb.conf.j2
+        dest: /etc/samba/smb.conf
+      notify:
+        - Restart samba service
+
+  handlers:
+    - name : Restart samba service
+      ansible.builtin.service:
+        name : smbd
+        state : restarted
+
+# Note: Remember to mount the shared directory
