@@ -4,6 +4,7 @@
   become : true
   vars_files:
     - vaults/samba_vault.yaml
+    - vars/main.yaml
 
   tasks:
 # Update && install pkg
@@ -47,6 +48,22 @@
         dest: /etc/samba/smb.conf
       notify:
         - Restart samba service
+
+#    - name : make dir samba log
+#      ansible.builtin.file:
+#        path: /var/log/samba
+#        state: directory
+#        mode: "0644"
+#        owner: root
+#        group: root
+#
+#    - name : touch file samba.log
+#      ansible.builtin.file:
+#        path: /var/log/samba.log
+#        state: touch
+#        mode: '0644'
+#        owner: root
+#        group: root
 
   handlers:
     - name : Restart samba service

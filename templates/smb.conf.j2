@@ -3,6 +3,11 @@
    security = user
    passdb backend = tdbsam
 
+   logging = syslog
+   log level = {{ log_level }}
+   log file = {{ log_file }}
+   max log size = {{ max_log_size }}
+
 [share]
    path = /srv/samba
    browseable = yes

@@ -5,3 +5,8 @@ forwarders:
 mydomain: home.lan
 myhostname: media
 
+log_level: "2"
+log_file : "/var/log/samba/samba.log"
+max_log_size: 1000
+
+
